@@ -1,0 +1,128 @@
+
+/* Start of top-level graph */
+digraph Workflow {
+rankdir=TB
+
+/* Title for graph */
+fontname=Helvetica; fontsize=18; labelloc=t
+label=IMDB_dataset_dataCleaning
+
+/* Start of double cluster for drawing box around nodes in workflow */
+subgraph cluster_workflow_box_outer { label=""; color=black; penwidth=2
+subgraph cluster_workflow_box_inner { label=""; penwidth=0
+
+/* Style for nodes representing atomic programs in workflow */
+node[shape=box style=filled fillcolor="#CCFFCC" peripheries=1 fontname=Helvetica]
+
+/* Nodes representing atomic programs in workflow */
+selecting_original_titles [shape=record rankdir=LR label="{<f0> selecting_original_titles |<f1> Selecting original titles based on region and language}"];
+remove_miscellaneous_values [shape=record rankdir=LR label="{<f0> remove_miscellaneous_values |<f1> Removed the redundancy, removed '/N' values from basics_df}"];
+remove_repeating_values [shape=record rankdir=LR label="{<f0> remove_repeating_values |<f1> Removed the redundant data from crew_df}"];
+check_episode_df [shape=record rankdir=LR label="{<f0> check_episode_df |<f1> Checked for the repeatition [tconst] and for datatype [seasonNumber, episodeNumber]}"];
+checked_ratings_df [shape=record rankdir=LR label="{<f0> checked_ratings_df |<f1> Checked for duplicate [titles] and miscellaneous [averageRating, numVotes]}"];
+checked_name_df [shape=record rankdir=LR label="{<f0> checked_name_df |<f1> Checked for duplicates and dropped empty columns}"];
+checked_principal_df [shape=record rankdir=LR label="{<f0> checked_principal_df |<f1> Dropped [Job] column as most values are missing or redundant to [Catergory] Column}"];
+merge_Akas_Basics_df [shape=record rankdir=LR label="{<f0> merge_Akas_Basics_df |<f1> Mergeing akas_clean and cleaned_basic_df}"];
+merge1_and_ratings [shape=record rankdir=LR label="{<f0> merge1_and_ratings |<f1> Mergeing merge1 and ratings_df}"];
+merge2_and_crew [shape=record rankdir=LR label="{<f0> merge2_and_crew |<f1> Mergeing merge2 and cleaned_crew_df}"];
+merge3_and_episode [shape=record rankdir=LR label="{<f0> merge3_and_episode |<f1> Mergeing merge3 and cleaned_episode_df}"];
+principal_and_name [shape=record rankdir=LR label="{<f0> principal_and_name |<f1> Mergeing names_df and principals_df}"];
+merge_df_4_and_5 [shape=record rankdir=LR label="{<f0> merge_df_4_and_5 |<f1> Mergeing merge4_df and merge5_df}"];
+trim_head_tail_space [shape=record rankdir=LR label="{<f0> trim_head_tail_space |<f1> Further cleaning the merge6_df by removing additional spaces}"];
+remove_consecutive_spaces [shape=record rankdir=LR label="{<f0> remove_consecutive_spaces |<f1> Further cleaning the trim_merge6_df by consecutive spaces}"];
+
+/* Style for nodes representing non-parameter data channels in workflow */
+node[shape=box style="rounded,filled" fillcolor="#FFFFCC" peripheries=1 fontname=Helvetica]
+
+/* Nodes for non-parameter data channels in workflow */
+input_akas_file [shape=record rankdir=LR label="{<f0> input_akas_file |<f1> file\:\{db_pth\}/Dataset/title.akas.tsv}"];
+input_basic_file [shape=record rankdir=LR label="{<f0> input_basic_file |<f1> file\:\{db_pth\}/Dataset/title.basics.tsv}"];
+input_crew_file [shape=record rankdir=LR label="{<f0> input_crew_file |<f1> file\:\{db_pth\}/Dataset/title.crew.tsv}"];
+input_episode_file [shape=record rankdir=LR label="{<f0> input_episode_file |<f1> file\:\{db_pth\}/Dataset/title.episode.tsv}"];
+input_ratings_file [shape=record rankdir=LR label="{<f0> input_ratings_file |<f1> file\:\{db_pth\}/Dataset/title.ratings.tsv}"];
+input_name_file [shape=record rankdir=LR label="{<f0> input_name_file |<f1> file\:\{db_pth\}/Dataset/title.name.tsv}"];
+input_principals_file [shape=record rankdir=LR label="{<f0> input_principals_file |<f1> file\:\{db_pth\}/Dataset/title.principals.tsv}"];
+akas_clean
+cleaned_basic_df
+merge1
+ratings_df
+merge2_df
+cleaned_crew_df
+cleaned_episode_df
+merge3_df
+names_df
+principals_df
+merge4_df
+merge5_df
+merge6_df
+trim_merge6_df
+
+/* Style for nodes representing parameter channels in workflow */
+node[shape=box style="rounded,filled" fillcolor="#FCFCFC" peripheries=1 fontname=Helvetica]
+
+/* Nodes representing parameter channels in workflow */
+
+/* Edges representing connections between programs and channels */
+selecting_original_titles -> akas_clean
+input_akas_file -> selecting_original_titles
+remove_miscellaneous_values -> cleaned_basic_df
+input_basic_file -> remove_miscellaneous_values
+remove_repeating_values -> cleaned_crew_df
+input_crew_file -> remove_repeating_values
+check_episode_df -> cleaned_episode_df
+input_episode_file -> check_episode_df
+checked_ratings_df -> ratings_df
+input_ratings_file -> checked_ratings_df
+checked_name_df -> names_df
+input_name_file -> checked_name_df
+checked_principal_df -> principals_df
+input_principals_file -> checked_principal_df
+merge_Akas_Basics_df -> merge1
+akas_clean -> merge_Akas_Basics_df
+cleaned_basic_df -> merge_Akas_Basics_df
+merge1_and_ratings -> merge2_df
+merge1 -> merge1_and_ratings
+ratings_df -> merge1_and_ratings
+merge2_and_crew -> merge3_df
+merge2_df -> merge2_and_crew
+cleaned_crew_df -> merge2_and_crew
+merge3_and_episode -> merge4_df
+cleaned_episode_df -> merge3_and_episode
+merge3_df -> merge3_and_episode
+principal_and_name -> merge5_df
+names_df -> principal_and_name
+principals_df -> principal_and_name
+merge_df_4_and_5 -> merge6_df
+merge4_df -> merge_df_4_and_5
+merge5_df -> merge_df_4_and_5
+trim_head_tail_space -> trim_merge6_df
+merge6_df -> trim_head_tail_space
+remove_consecutive_spaces -> final_dataFrame
+trim_merge6_df -> remove_consecutive_spaces
+
+/* End of double cluster for drawing box around nodes in workflow */
+}}
+
+/* Style for nodes representing workflow input ports */
+node[shape=circle style="rounded,filled" fillcolor="#FFFFFF" peripheries=1 fontname=Helvetica width=0.2]
+
+/* Nodes representing workflow input ports */
+input_akas_file_input_port [label=""]
+input_basic_file_input_port [label=""]
+input_crew_file_input_port [label=""]
+input_episode_file_input_port [label=""]
+input_ratings_file_input_port [label=""]
+input_name_file_input_port [label=""]
+input_principals_file_input_port [label=""]
+
+/* Edges from input ports to channels */
+input_akas_file_input_port -> input_akas_file
+input_basic_file_input_port -> input_basic_file
+input_crew_file_input_port -> input_crew_file
+input_episode_file_input_port -> input_episode_file
+input_ratings_file_input_port -> input_ratings_file
+input_name_file_input_port -> input_name_file
+input_principals_file_input_port -> input_principals_file
+
+/* End of top-level graph */
+}

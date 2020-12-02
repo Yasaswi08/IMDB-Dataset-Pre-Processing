@@ -1,0 +1,91 @@
+# @begin IMDB_dataset_dataCleaning  @desc reading the all file from the gievn path
+# @in input_akas_file  @URI file:{db_pth}/Dataset/title.akas.tsv
+# @in input_basic_file  @URI file:{db_pth}/Dataset/title.basics.tsv
+# @in input_crew_file  @URI file:{db_pth}/Dataset/title.crew.tsv
+# @in input_episode_file  @URI file:{db_pth}/Dataset/title.episode.tsv
+# @in input_ratings_file  @URI file:{db_pth}/Dataset/title.ratings.tsv
+# @in input_name_file  @URI file:{db_pth}/Dataset/title.name.tsv
+# @in input_principals_file  @URI file:{db_pth}/Dataset/title.principals.tsv
+
+#     @begin selecting_original_titles  @desc Selecting original titles based on region and language
+#     @in input_akas_file  @AS input_akas_file
+#     @out fully_cleaned_Akas  @As akas_clean
+#     @end selecting_original_titles
+
+#     @begin remove_miscellaneous_values  @desc Removed the redundancy, removed '/N' values from basics_df
+#     @in input_basic_file  @AS input_basic_file
+#     @out cleaned_basic_df  @As cleaned_basic_df
+#     @end remove_miscellaneous_values
+
+#     @begin remove_repeating_values  @desc Removed the redundant data from crew_df
+#     @in input_crew_file  @AS input_crew_file
+#     @out cleaned_crew_df  @As cleaned_crew_df
+#     @end remove_repeating_values
+
+#     @begin check_episode_df  @desc Checked for the repeatition [tconst] and for datatype [seasonNumber, episodeNumber]
+#     @in input_episode_file  @AS input_episode_file
+#     @out verified_episode_df  @As cleaned_episode_df
+#     @end check_episode_df
+
+#     @begin checked_ratings_df  @desc Checked for duplicate [titles] and  miscellaneous [averageRating, numVotes]
+#     @in input_ratings_file
+#     @out ratings_df
+#     @end checked_ratings_df
+
+#     @begin checked_name_df  @desc Checked for duplicates and dropped empty columns
+#     @in input_name_file
+#     @out names_df
+#     @end checked_name_df
+
+#     @begin checked_principal_df  @desc Dropped [Job] column as most values are missing or redundant to [Catergory] Column
+#     @in input_principals_file
+#     @out principals_df
+#     @end checked_principal_df
+
+#     @begin merge_Akas_Basics_df  @desc Mergeing akas_clean and cleaned_basic_df
+#     @in fully_cleaned_Akas  @As akas_clean
+#     @in cleaned_basic_df  @As cleaned_basic_df
+#     @out merge1
+#     @end merge_Akas_Basics_df
+
+#     @begin merge1_and_ratings  @desc Mergeing merge1 and ratings_df
+#     @in merge1
+#     @in ratings_df
+#     @out merge2_df
+#     @end merge1_and_ratings
+
+#     @begin merge2_and_crew  @desc Mergeing merge2 and cleaned_crew_df
+#     @in merge2_df
+#     @in cleaned_crew_df
+#     @out merge3_df
+#     @end merge2_and_crew
+
+#     @begin merge3_and_episode  @desc Mergeing merge3 and cleaned_episode_df
+#     @in cleaned_episode_df
+#     @in merge3_df
+#     @out merge4_df
+#     @end merge3_and_episode
+
+#     @begin principal_and_name  @desc Mergeing names_df and principals_df
+#     @in names_df
+#     @in principals_df
+#     @out merge5_df
+#     @end principal_and_name
+
+#     @begin merge_df_4_and_5  @desc Mergeing merge4_df and merge5_df
+#     @in merge4_df
+#     @in merge5_df
+#     @out merge6_df
+#     @end merge_df_4_and_5
+
+#     @begin trim_head_tail_space  @desc Further cleaning the merge6_df by removing additional spaces
+#     @in merge6_df
+#     @out trim_merge6_df
+#     @end trim_head_tail_space
+
+#     @begin remove_consecutive_spaces  @desc Further cleaning the trim_merge6_df by consecutive spaces
+#     @in trim_merge6_df
+#     @out final_dataFrame
+#     @end remove_consecutive_spaces
+
+# @end IMDB_dataset_dataCleaning
